@@ -1,11 +1,8 @@
 const webpack = require("webpack")
-const      merge = require("webpack-merge")
-const      UglifyJsPlugin = require("uglifyjs-webpack-plugin")
-const      path = require("path")
-const      CopyWebpackPlugin = require("copy-webpack-plugin")
-// https://github.com/webpack-contrib/copy-webpack-plugin/issues/29
-const WriteFilePlugin = require('write-file-webpack-plugin')
-
+const merge = require("webpack-merge")
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const path = require("path")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 function libraryOutput(dest) {
     return {
@@ -179,7 +176,6 @@ module.exports = function (env) {
         console.log("globals: ", g)
         return merge(output, common(scalapath), modeNone, prod, {
             plugins: [
-                new WriteFilePlugin(),
                 new webpack.DefinePlugin(g),
                 new UglifyJsPlugin({
                     cache: true,
@@ -197,7 +193,6 @@ module.exports = function (env) {
         console.log("globals: ", g)
         return merge(output, common(scalapath), modeNone, dev, {
             plugins: [
-                new WriteFilePlugin(),                
                 new webpack.HotModuleReplacementPlugin(),
                 new webpack.DefinePlugin(g),
                 copyplugin,
