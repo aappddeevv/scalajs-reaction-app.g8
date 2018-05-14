@@ -1,0 +1,26 @@
+/** examples toplevel styles in CSS format */
+
+:root {
+}
+
+.toplevel {
+    /* Header (outside the react dom container) is 40px. */
+    height: calc(100% - 40px);
+    overflow: hidden;
+    & [role=tabpanel] {
+        /* Tab header is 40px. */
+        height: calc(100% - 40px);
+        overflow: hidden;
+    }
+    & .scrollme {
+        overflow-y: auto;
+        height: 100%;
+    }
+    & .readme {
+        width: 800px;
+    }
+}
+
+.container {
+    overflow: hidden;
+}
