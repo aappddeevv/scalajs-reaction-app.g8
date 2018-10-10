@@ -20,7 +20,7 @@ val commonScalacOptions = Seq(
     "-Ypartial-unification",
 )
 
-val scalajsReactVersion = "0.1.0-M4"
+val scalajsReactVersion = "0.1.0-M6"
 
 lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions ++
