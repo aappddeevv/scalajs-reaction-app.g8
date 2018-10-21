@@ -53,11 +53,16 @@ More commands...
 * `sbt clean/fastOptJS/fullOptJS`: Runs sbt as you normally would.
 * `npm run app`: Performs production webpack bundling.
 * `npm run app:dev`: Performs dev webpack bundling.
-* `npm run app:dev:start`: Stats webpack-dev-server using fast scala.
+* `npm run app:dev:start`: Starts webpack-dev-server using fast scala.
+* `npm run app:dev:watch`: Starts webpack-dev-server and watches for js file changes. 
 
 For development, since sbt watches the js and public assets directory, you can
 use `sbt ~npmBuildFast` to watch all scala and non-scala assets. This runs the
-scala build then calls webpack to create your output.
+scala build then calls webpack to create your output. It easier and faster
+to run sbt as you normally do, for example from within emacs, and have a shell
+window open running `npm run app:dev:start` which first starts a browser instance
+or opens a new tab in an existing browser then waits for an updated scalajs
+output file and re-injects it into the browser automatically.
 
 The "app" entries in package.json are used by sbt when sbt calls into the
 javascript world to perform webpack bundling.

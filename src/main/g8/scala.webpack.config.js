@@ -49,7 +49,7 @@ const devServer = {
     compress: true,
     hot: true,
     open: true,
-    https: true,
+    //https: true, // setting to true requires to accept self signed certs
     watchContentBase: true,
     headers: {
         'Access-Control-Allow-Origin': '*'
