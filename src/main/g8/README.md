@@ -57,12 +57,15 @@ More commands...
 * `npm run app:dev:watch`: Starts webpack-dev-server and watches for js file changes. 
 
 For development, since sbt watches the js and public assets directory, you can
-use `sbt ~npmBuildFast` to watch all scala and non-scala assets. This runs the
-scala build then calls webpack to create your output. It easier and faster
-to run sbt as you normally do, for example from within emacs, and have a shell
-window open running `npm run app:dev:start` which first starts a browser instance
-or opens a new tab in an existing browser then waits for an updated scalajs
-output file and re-injects it into the browser automatically.
+use `sbt ~npmBuildFast` to watch all scala and non-scala assets and perform a
+webpack build when anything changes. This is a scala-first approach.
+
+It easier and faster to run sbt as you normally do, for example from within
+emacs and have a shell window open running `npm run app:dev:start`. This
+approach starts a browser instance or opens a new tab in an existing browser
+then waits for an updated scalajs output file and re-injects it into the browser
+automatically. It also watches any typescript/js files and recompiles them when
+they change. This is the webpack-first approach.
 
 The "app" entries in package.json are used by sbt when sbt calls into the
 javascript world to perform webpack bundling.

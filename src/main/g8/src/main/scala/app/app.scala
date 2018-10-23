@@ -2,22 +2,20 @@ package app
 
 import scala.scalajs.js
 import js.annotation._
-import js.JSConverters._
-import js.Dynamic.{literal => lit}
 
 import org.scalajs.dom
-import ttg.react._
-import ttg.react.elements._
-import ttg.react.implicits._
+import ttg.react
+import react._
+import elements._
+import implicits._
 import vdom._
-import ttg.react.fabric
 import fabric._
-import fabric.components._
-import fabric.styling._
-import Styling._
+import components._
 
 /** This shows importing an existing css page that is processed by your bundler
  * if you want. It's better to use a css-in-js or even a scala-in-js solution.
+ * This loads the CSS file using the webpack defined bundler so to understand
+ * how it is processed, you need to look at the webpack config file.
  */
 @js.native
 @JSImport("App/app.css", JSImport.Namespace)
