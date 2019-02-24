@@ -3,7 +3,7 @@ import scala.sys.process._
 lazy val buildSettings = Seq(
   organization := "$org$",
   licenses ++= Seq(("MIT", url("http://opensource.org/licenses/MIT"))),
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.12.8",
   //resolvers += Resolver.sonatypeRepo("releases"),
   resolvers += Resolver.bintrayRepo("aappddeevv", "maven"),  
 )
@@ -29,9 +29,9 @@ lazy val commonSettings = Seq(
         else Nil),
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   libraryDependencies ++= Seq(
-    "ttg" %%% "scalajs-react-core" % scalajsReactVersion,
-    "ttg" %%% "scalajs-react-fabric" % scalajsReactVersion,
-    "ttg" %%% "scalajs-react-react-dom" % scalajsReactVersion,
+    "ttg" %%% "scalajs-reaction-core" % scalajsReactVersion,
+    "ttg" %%% "scalajs-reaction-fabric" % scalajsReactVersion,
+    "ttg" %%% "scalajs-reaction-react-dom" % scalajsReactVersion,
     "org.scala-js" %%% "scalajs-dom" % "latest-version",
     "org.scalatest"          %%% "scalatest"    % "latest.release" % "test")
 )

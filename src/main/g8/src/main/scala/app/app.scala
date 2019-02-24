@@ -29,8 +29,8 @@ import styles._
 
 object Pages {
 
-  val todo = PivotItem(new IPivotItemProps {
-    linkText = "To Do"
+  val todo = PivotItem(new PivotItem.Props {
+    headerText = "To Do"
     itemKey = "todo"
     className = estyles.scrollme.asString
   })(
@@ -38,8 +38,8 @@ object Pages {
     ToDos.make(Some("Your To Do List"), fakedata.initialToDos)
   )
 
-  val helloWorld = PivotItem(new IPivotItemProps {
-    linkText = "Message"
+  val helloWorld = PivotItem(new PivotItem.Props {
+    headerText = "Message"
     itemKey = "message"
     className = estyles.scrollme.asString
   })(
@@ -59,7 +59,7 @@ object Main {
   def App(): Unit = {
     uifabric_icons.initializeIcons()
     reactdom.createAndRenderWithId(
-          Fabric(new IFabricProps {
+          Fabric(new Fabric.Props {
             className = estyles.toplevel.asString
           })(
             Pivot()(

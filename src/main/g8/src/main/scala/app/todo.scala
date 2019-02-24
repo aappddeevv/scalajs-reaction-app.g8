@@ -51,7 +51,8 @@ object ToDoComponent {
       }
     }
 
-  def getClassNames(s: Styles) = Styling.mergeStyleSets[ClassNames](s)
+  val getClassNames =
+    Utilities.memoizeFunction[Styles,ClassNames](Styling.mergeStyleSets[ClassNames](_))
 
   case class ToDo(id: Int, name: String, added: js.Date = null)
 
@@ -70,13 +71,13 @@ object ToDoComponent {
           className = rootClassName.orUndefined
         },
         getStyles, styles))
-      div(new DivProps { className = cn.todo })(
-        Label(new ILabelProps {
+      divWithClassname(cn.todo,
+        Label(new Label.Props {
           className = cn.title
         })(
           todo.name
         ),
-        DefaultButton(new IButtonProps {
+        Button.Default(new Button.Props {
           text = "Remove"
           onClick = js.defined(_ => remove(()))
         })()
@@ -166,7 +167,8 @@ object ToDos {
         })
     }
 
-  def getClassNames(s: Styles) = Styling.mergeStyleSets[ClassNames](s)
+  val getClassNames =
+    fabric.Utilities.memoizeFunction[Styles,ClassNames](Styling.mergeStyleSets[ClassNames](_))
 
   sealed trait ToDoAction
   case class Add(todo: ToDo)                     extends ToDoAction
@@ -180,10 +182,10 @@ object ToDos {
   case class State(
       todos: Seq[ToDo] = Seq(),
       input: Option[String] = None,
-      var textFieldRef: Option[ITextField] = None)
+      var textFieldRef: Option[TextField.ITextField] = None)
 
-  case class RP(title: Option[String] = None)
-  val c = reducerComponentWithRetainedProps[State, RP, ToDoAction]("ToDos")
+  val Name = "ToDos"
+  val c = reducerComponent[State, ToDoAction](Name)
   import c.ops._
 
   def remove(id: Int)(self: c.Self): Unit = self.send(Remove(id))
@@ -194,14 +196,16 @@ object ToDos {
     self.state.input.foreach { i =>
       self.handle { s =>
         s.send(Add(ToDo(mkId(), i)))
-        s.state.textFieldRef.foreach(ref => refToJs(ref).focus())
+        s.state.textFieldRef.foreach(ref => ref.focus())
       }
     }
 
   def make(
     title: Option[String] = None,
     todos: Seq[ToDo] = Seq(),
-    rootClassName: Option[String] = None) =
+    rootClassName: Option[String] = None,
+    styles: js.UndefOr[IStyleFunctionOrObject[StyleProps, Styles]] = js.undefined
+  ) =
 
     c.copy(new methods {
       subscriptions = js.defined { self =>
@@ -211,15 +215,14 @@ object ToDos {
             println("ToDo: subscriptions: unmounted")
         })
       }
-      val retainedProps = RP(title)
       val reducer = (action, state, gen) => {
         action match {
           case Add(t) =>
             gen.update(state.copy(todos = state.todos :+ t, input = None))
           case Remove(id) =>
-            gen.updateAndEffect(state.copy(todos = state.todos.filterNot(_.id == id)))
+            gen.update(state.copy(todos = state.todos.filterNot(_.id == id)))
           case InputChanged(iopt) =>
-            gen.updateAndEffect(state.copy(input = iopt))
+            gen.update(state.copy(input = iopt))
           case _ =>
             gen.skip
         }
@@ -234,21 +237,22 @@ object ToDos {
               className = rootClassName.orUndefined
               width = 500
             },
-            getStyles))
+            getStyles,
+            styles))
           div(new DivProps {
             className = cn.root
           })(
             Label()(s"""App: ${title.getOrElse("The To Do List")}"""),
             div(new DivProps { className = cn.dataEntry })(
-              TextField(new ITextFieldProps {
+              TextField(new TextField.Props {
                 placeholder = "enter new todo"
-                componentRef = js.defined((r: ITextField) => self.state.textFieldRef = Option(r))
-                onChanged = js.defined((e: String) => self.handle(inputChanged(Option(e))))
+                componentRef = js.defined((r: TextField.ITextField) => self.state.textFieldRef = Option(r))
+                onChangeInput = js.defined((_, e: String) => self.handle(inputChanged(Option(e))))
                 value = self.state.input.getOrElse[String]("")
                 autoFocus = true
                 onKeyPress = js.defined(e => if (e.which == dom.ext.KeyCode.Enter) addit(self))
               })(),
-              PrimaryButton(new IButtonProps {
+              Button.Primary(new Button.Props {
                 text = "Add"
                 disabled = self.state.input.size == 0
                 // demonstrates inline callback
