@@ -158,7 +158,7 @@ const prod = {
 module.exports = function (env) {
     const isProd = env && env.BUILD_KIND && env.BUILD_KIND==="production"
     // the "app" name must be coordinated with build.sbt
-    const scalapath = path.join(__dirname, "./target/scala-2.12/app-" + (isProd ? "opt.js":"fastopt.js"))
+    const scalapath = path.join(__dirname, "./target/scala-2.13/app-" + (isProd ? "opt.js":"fastopt.js"))
     const staticAssets = copies(path.join(__dirname, "dist"))
     const output = libraryOutput(path.join(__dirname, "dist"))
     const globals = (nodeEnv) => ({

@@ -1,23 +1,27 @@
 import scala.sys.process._
 
+// reload build.sbt on changes
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 lazy val buildSettings = Seq(
   organization := "$org$",
   licenses ++= Seq(("MIT", url("http://opensource.org/licenses/MIT"))),
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.0",
   //resolvers += Resolver.sonatypeRepo("releases"),
   resolvers += Resolver.bintrayRepo("aappddeevv", "maven"),  
 )
 
 val commonScalacOptions = Seq(
-    "-deprecation",
-    "-encoding", "UTF-8",
-    "-feature",
-    "-language:_",
-    "-unchecked",
-    "-Yno-adapted-args",
-    "-Ywarn-numeric-widen",
-    "-Xfuture",
-    "-Ypartial-unification",
+  "-deprecation",
+  "-encoding", "UTF-8",
+  "-feature",
+  "-language:_",
+  "-unchecked",
+  "-Ywarn-numeric-widen",
+  // 2.12 flags
+  //"-Xfuture",
+  //"-Yno-adapted-args",
+  //"-Ypartial-unification",
 )
 
 val scalajsReactVersion = "0.1.0-M7"
@@ -32,7 +36,7 @@ lazy val commonSettings = Seq(
     "ttg" %%% "scalajs-reaction-core" % scalajsReactVersion,
     "ttg" %%% "scalajs-reaction-fabric" % scalajsReactVersion,
     "ttg" %%% "scalajs-reaction-react-dom" % scalajsReactVersion,
-    "org.scala-js" %%% "scalajs-dom" % "latest-version",
+    "org.scala-js" %%% "scalajs-dom" % "0.9.7",
     "org.scalatest"          %%% "scalatest"    % "latest.release" % "test")
 )
 

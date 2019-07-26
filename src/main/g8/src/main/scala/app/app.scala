@@ -35,7 +35,10 @@ object Pages {
     className = estyles.scrollme.asString
   })(
     Label()("Note: The To Do manager's data is reset each time you switch tabs."),
-    ToDos.make(Some("Your To Do List"), fakedata.initialToDos)
+    ToDos(new ToDos.Props {
+      var title = "Your To Do List"
+      var todos = fakedata.initialToDos
+    })
   )
 
   val helloWorld = PivotItem(new PivotItem.Props {
@@ -43,7 +46,7 @@ object Pages {
     itemKey = "message"
     className = estyles.scrollme.asString
   })(
-    Message.make("hello world")()
+    Message("hello world")()
   )
 
 }
@@ -58,7 +61,7 @@ object Main {
   @JSExportTopLevel("App")
   def App(): Unit = {
     uifabric_icons.initializeIcons()
-    reactdom.createAndRenderWithId(
+    reactdom.renderToElementWithId(
           Fabric(new Fabric.Props {
             className = estyles.toplevel.asString
           })(

@@ -93,11 +93,10 @@
         "xmlserializer": "^0.6.0"
     },
     "dependencies": {
-        "@babel/runtime": "^7.0.0",
-        "create-react-class": "^15.6.3",
-        "office-ui-fabric-react": "^6.82.0",
-        "react": "^16.5.2",
-        "react-dom": "^16.5.2",
+        "@babel/runtime": "^7.1.2",
+        "office-ui-fabric-react": "^7.1.1",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
         "tslib": "^1.9.3"
     },
     "browserslist": [
