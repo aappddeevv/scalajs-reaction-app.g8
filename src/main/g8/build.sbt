@@ -6,7 +6,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 lazy val buildSettings = Seq(
   organization := "$org$",
   licenses ++= Seq(("MIT", url("http://opensource.org/licenses/MIT"))),
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.1",
   //resolvers += Resolver.sonatypeRepo("releases"),
   resolvers += Resolver.bintrayRepo("aappddeevv", "maven"),  
 )
