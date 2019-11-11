@@ -102,7 +102,6 @@ object ToDos {
 
   var idCounter: Int = -1
   def mkId(): Int    = { idCounter = idCounter + 1; idCounter }
-  import ToDoStyling._
 
   /** We put all state into one fat object. Probably better
    * to separate out `input` into its own useState.
@@ -118,8 +117,6 @@ object ToDos {
   def addit(input: Option[String], dispatch: Dispatch[Action]) =
     input.foreach { i =>
       dispatch(Add(ToDo(mkId(), i)))
-      // this is an effect so it should not go here
-      //focusable.foreach(_.focus())
     }
 
   def reducer(state: State, action: Action): State =
@@ -159,7 +156,7 @@ object ToDos {
     val cn = getClassNames(
       new StyleProps { classNames = props.classNames /* add style hints from props if any */ },
       props.styles 
-    ))
+    )
 
     div(new DivProps {
       className = cn.root
@@ -172,8 +169,8 @@ object ToDos {
             // Option(r) -> None if r is null
             r => ifield.current = Option(r)
           }
-          onChangeInput = js.defined{(_, e: String) =>
-            dispatch(InputChanged(Option(e)))
+          onChangeInput = js.defined{(_, v) =>
+            dispatch(InputChanged(Option(v)))
           }
           value = state.input.getOrElse[String]("")
           autoFocus = true
@@ -186,8 +183,8 @@ object ToDos {
             disabled = state.input.size == 0
             // demonstrates inline callback
             // could be:
-            // _ => since we don't use 'e', could
-            // ReactEvent[dom.html.Input] to be more specifci
+            // _ => since we don't use 'e'
+            // ReactEvent[dom.html.Input] to be more specific
             // ReactKeyboardEvent[_] to be more specific
             // ReactKeyboardEvent[dom.html.Input] to be more specific
             onClick = js.defined((e: ReactEvent[_]) => addit(state.input, dispatch))
@@ -202,19 +199,6 @@ object ToDos {
         })
     )
   }
-}
-
-object fakedata {
-  val initialToDos = Seq(
-    ToDo(ToDos.mkId(), "Call Fred")
-  )
-}
-
-/** These would go directly in the component's enclosing object normally if
- * there were dependencies on other parts of that component. The below is just
- * pure styling so its here.
- */
-object ToDoStyling {
 
   @js.native
   trait ClassNames extends IClassNamesTag {
@@ -270,4 +254,10 @@ object ToDoStyling {
   // example of memoizing, you need a js.Function to use memoizeFunction
   val getClassNames: GetClassNamesFn[StyleProps, Styles, ClassNames] =
     (p,s) => mergeStyleSets(concatStyleSetsWithProps(p,getStyles,s))
+}
+
+object fakedata {
+  val initialToDos = Seq(
+    ToDo(ToDos.mkId(), "Call Fred")
+  )
 }

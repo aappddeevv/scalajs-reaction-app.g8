@@ -18,10 +18,6 @@ val commonScalacOptions = Seq(
   "-language:_",
   "-unchecked",
   "-Ywarn-numeric-widen",
-  // 2.12 flags
-  //"-Xfuture",
-  //"-Yno-adapted-args",
-  //"-Ypartial-unification",
 )
 
 val scalajsReactVersion = "0.1.0-M7"
