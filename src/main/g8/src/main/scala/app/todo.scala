@@ -141,7 +141,7 @@ object ToDos {
   val sfc = SFC1[Props] { props =>
     React.useDebugValue(Name)
     val ifield = React.useRef[Option[TextField.ITextField]](None)    
-    React.useEffectMountingCb{() =>
+    React.useEffectMounting{() =>
       println("ToDo: subscriptions: called during mount")
         () => println("ToDo: subscriptions: unmounted")
     }
@@ -154,7 +154,7 @@ object ToDos {
     }
 
     val cn = getClassNames(
-      new StyleProps { classNames = props.classNames /* add style hints from props if any */ },
+      new StyleProps { className = props.className /* add style hints from props if any */ },
       props.styles 
     )
 
@@ -251,7 +251,6 @@ object ToDos {
   }
 
   import merge_styles._
-  // example of memoizing, you need a js.Function to use memoizeFunction
   val getClassNames: GetClassNamesFn[StyleProps, Styles, ClassNames] =
     (p,s) => mergeStyleSets(concatStyleSetsWithProps(p,getStyles,s))
 }
