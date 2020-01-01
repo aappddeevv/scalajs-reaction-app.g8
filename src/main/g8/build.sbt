@@ -29,10 +29,10 @@ lazy val commonSettings = Seq(
         else Nil),
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   libraryDependencies ++= Seq(
-    "ttg" %%% "scalajs-reaction-core" % scalajsReactVersion,
-    "ttg" %%% "scalajs-reaction-fabric" % scalajsReactVersion,
-    "ttg" %%% "scalajs-reaction-react-dom" % scalajsReactVersion,
-    "org.scala-js" %%% "scalajs-dom" % "0.9.7",
+    "ttg" %%% "react" % scalajsReactVersion,
+    "ttg" %%% "fabric" % scalajsReactVersion,
+    "ttg" %%% "react-dom" % scalajsReactVersion,
+    "org.scala-js" %%% "scalajs-dom" % "0.9.8",
     "org.scalatest"          %%% "scalatest"    % "latest.release" % "test")
 )
 

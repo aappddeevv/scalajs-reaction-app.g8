@@ -2,7 +2,7 @@ g8 aappddeevv/scalajs-react template
 
 ## scalajs-reaction
 
-This is a ReasonReact derived API to React.
+This is a ReasonReact derived API to React. It is entirely based on react hooks.
 
 The main project is located at [github](https://github.com/aappddeevv/scalajs-reaction).
 

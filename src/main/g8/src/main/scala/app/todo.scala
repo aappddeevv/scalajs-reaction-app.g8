@@ -6,9 +6,7 @@ import js.Dynamic.{literal => lit, global => g}
 import js.JSConverters._
 
 import org.scalajs.dom
-import ttg.react
 import react._
-import elements._
 import implicits._
 import fabric._
 import components._
@@ -32,7 +30,7 @@ object ToDoItem {
   def apply(props: Props) = sfc(props)
 
   val sfc = SFC1[Props]{ props =>
-    React.useDebugValue(Name)
+    useDebugValue(Name)
     divWithClassname(
       props.rootClassname,
       Label(new Label.Props {
@@ -58,8 +56,8 @@ object ToDoListHeader {
   def apply(props: Props) = sfc(props)
 
   val sfc = SFC1[Props]{ props =>
-    React.useDebugValue(Name)
-    div(Label()(s"# To Dos - ${props.length}"))
+    useDebugValue(Name)
+    div(Label(s"# To Dos - ${props.length}"))
   }.memo
 }
 
@@ -78,7 +76,7 @@ object ToDoList {
   def apply(props: Props) = sfc(props)
 
   val sfc = SFC1[Props] { props =>
-    React.useDebugValue(Name)
+    useDebugValue(Name)
     divWithClassname(
       props.listClassname,
       ToDoListHeader(new ToDoListHeader.Props{ var length = props.length}),
@@ -139,17 +137,17 @@ object ToDos {
   def apply(props: Props) = sfc(props)
 
   val sfc = SFC1[Props] { props =>
-    React.useDebugValue(Name)
-    val ifield = React.useRef[Option[TextField.ITextField]](None)    
-    React.useEffectMounting{() =>
+    useDebugValue(Name)
+    val ifield = useRef[Option[TextField.ITextField]](None)    
+    useEffectMounting{() =>
       println("ToDo: subscriptions: called during mount")
         () => println("ToDo: subscriptions: unmounted")
     }
 
     val (state, dispatch) =
-      React.useReducer[State,Action](reducer, State(props.todos, None))
+      useReducer[State,Action](reducer, State(props.todos, None))
     // if the input is added as a todo or todo remove, reset focus
-    React.useEffect(state.todos.length){() =>
+    useEffect(state.todos.length){() =>
       ifield.current.foreach(_.focus())
     }
 
@@ -161,7 +159,7 @@ object ToDos {
     div(new DivProps {
       className = cn.root
     })(
-      Label()(s"""App: ${props.title}"""),
+      Label(s"""App: ${props.title}"""),
       div(new DivProps { className = cn.dataEntry })(
         TextField(new TextField.Props {
           placeholder = "enter new todo"
@@ -209,10 +207,10 @@ object ToDos {
   }
 
   trait Styles extends IStyleSetTag {
-    val root: IStyle
-    val todo: IStyle
-    val title: IStyle
-    val dataEntry: IStyle
+    var root: js.UndefOr[IStyle] = js.undefined
+    var todo: js.UndefOr[IStyle] = js.undefined
+    var title: js.UndefOr[IStyle] = js.undefined
+    var dataEntry: js.UndefOr[IStyle] = js.undefined
   }
 
   trait StyleProps extends js.Object {
@@ -223,24 +221,24 @@ object ToDos {
   val getStyles = stylingFunction[StyleProps, Styles] { props =>
     val randomArg = props.randomArg.getOrElse(300)
     new Styles {
-      val root = stylearray(
+      root = stylearray(
         new IRawStyle {
           selectors = selectorset(
             ":global(:root)" -> lit(
               "--label-width" -> s"${randomArg}px",
             ))
         })
-      val todo = new IRawStyle {
+      todo = new IRawStyle {
         displayName = "machina"
         display = "flex"
         marginBottom = "10px"
         selectors = selectorset("& $title" -> new IRawStyle {})
       }
-      val title =  new IRawStyle {
+      title =  new IRawStyle {
         width = "var(--label-width)"
         marginRight = "10px"
       }
-      val dataEntry = new IRawStyle {
+      dataEntry = new IRawStyle {
         display = "flex"
         selectors = selectorset("& .ms-Textfield" -> new IRawStyle {
           width = "var(--label-width)"

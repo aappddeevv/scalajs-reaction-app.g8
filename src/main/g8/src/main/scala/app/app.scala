@@ -4,9 +4,7 @@ import scala.scalajs.js
 import js.annotation._
 
 import org.scalajs.dom
-import ttg.react
 import react._
-import elements._
 import implicits._
 import vdom._
 import fabric._
@@ -34,7 +32,7 @@ object Pages {
     itemKey = "todo"
     className = estyles.scrollme.asString
   })(
-    Label()("Note: The To Do manager's data is reset each time you switch tabs."),
+    Label("Note: The To Do manager's data is reset each time you switch tabs."),
     ToDos(new ToDos.Props {
       var title = "Your To Do List"
       var todos = fakedata.initialToDos
@@ -61,7 +59,7 @@ object Main {
   @JSExportTopLevel("App")
   def App(): Unit = {
     uifabric_icons.initializeIcons()
-    reactdom.renderToElementWithId(
+    react_dom.renderToElementWithId(
           Fabric(new Fabric.Props {
             className = estyles.toplevel.asString
           })(
