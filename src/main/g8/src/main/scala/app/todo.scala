@@ -4,7 +4,6 @@ import scala.scalajs.js
 import js.annotation._
 import js.Dynamic.{literal => lit, global => g}
 import js.JSConverters._
-
 import org.scalajs.dom
 import react._
 import implicits._

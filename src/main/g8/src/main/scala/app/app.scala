@@ -2,7 +2,6 @@ package app
 
 import scala.scalajs.js
 import js.annotation._
-
 import org.scalajs.dom
 import react._
 import implicits._
