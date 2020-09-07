@@ -6,8 +6,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 lazy val buildSettings = Seq(
   organization := "$org$",
   licenses ++= Seq(("MIT", url("http://opensource.org/licenses/MIT"))),
-  scalaVersion := "2.13.1",
-  //resolvers += Resolver.sonatypeRepo("releases"),
+  scalaVersion := "2.13.2",
   resolvers += Resolver.bintrayRepo("aappddeevv", "maven"),  
 )
 
@@ -18,22 +17,20 @@ val commonScalacOptions = Seq(
   "-language:_",
   "-unchecked",
   "-Ywarn-numeric-widen",
+  "-Ymacro-annotation",
 )
 
 val scalajsReactVersion = "0.1.0-M7"
 
 lazy val commonSettings = Seq(
-  scalacOptions ++= commonScalacOptions ++
-        (if (scalaJSVersion.startsWith("0.6."))
-      Seq("-P:scalajs:sjsDefinedByDefault")
-        else Nil),
+  scalacOptions ++= commonScalacOptions,
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   libraryDependencies ++= Seq(
     "ttg" %%% "react" % scalajsReactVersion,
     "ttg" %%% "fabric" % scalajsReactVersion,
     "ttg" %%% "react-dom" % scalajsReactVersion,
-    "org.scala-js" %%% "scalajs-dom" % "0.9.8",
-    "org.scalatest"          %%% "scalatest"    % "latest.release" % "test")
+    "ttg" %%% "react-macros" % scalajsReactVersion,
+    "org.scala-js" %%% "scalajs-dom" % "1.0.0",
 )
 
 lazy val libsettings = buildSettings ++ commonSettings

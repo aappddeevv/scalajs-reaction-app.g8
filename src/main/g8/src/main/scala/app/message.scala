@@ -13,9 +13,9 @@ object Message {
   object JS extends ReactJsComponent
 
   def apply(message: String)(children: ReactNode*) =
-    createElement(JS, literal("message"-> message))(children:_*)
+    createElement(JS, literal("message"-> message), children:_*)
 
-  // we often define a Props trait and use that instead of a String directly
+  // we often define a Props trait and instead of a String directly
   /*
   trait Props extends js.Object {
     val message: String

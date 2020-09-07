@@ -5,7 +5,7 @@ export interface MessageProps {
     message?: string
 }
 
-export const Message: React.SFC<MessageProps> = (props) => {
+export const Message = (props: MessageProps) => {
     return (
         <Label>
             {props.message ? props.message : "No Message"}

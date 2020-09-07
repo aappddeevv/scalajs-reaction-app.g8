@@ -6,12 +6,11 @@ import js.Dynamic.{literal => lit, global => g}
 import js.JSConverters._
 import org.scalajs.dom
 import react._
-import implicits._
+import react.implicits._
 import fabric._
-import components._
-import styling._
+import fabric.components._
+import fabric.styling._
 import vdom._
-import vdom.tags._
 
 case class ToDo(id: Int, name: String, added: js.Date = null, completed: Boolean = false)
 
@@ -26,10 +25,9 @@ object ToDoItem {
     var key: js.UndefOr[String] = js.undefined
   }
 
-  def apply(props: Props) = sfc(props)
+  def apply(props: Props) = render.elementWith(props)
 
-  val sfc = SFC1[Props]{ props =>
-    useDebugValue(Name)
+  val render: ReactFC[Props] = props => {
     divWithClassname(
       props.rootClassname,
       Label(new Label.Props {
@@ -42,7 +40,8 @@ object ToDoItem {
         onClick = js.defined(_ => props.remove())
       })()
     )
-  }.memo
+  }
+  render.displayName(Name)
 }
 
 object ToDoListHeader {
@@ -52,12 +51,12 @@ object ToDoListHeader {
     var length: Int
   }
 
-  def apply(props: Props) = sfc(props)
+  def apply(props: Props) = render.elementWith(props)
 
-  val sfc = SFC1[Props]{ props =>
-    useDebugValue(Name)
+  val render: ReactFC[Props] = props => {
     div(Label(s"# To Dos - ${props.length}"))
-  }.memo
+  }
+  render.displayName(Name)
 }
 
 object ToDoList {
@@ -72,10 +71,9 @@ object ToDoList {
     var titleClassname: js.UndefOr[String] = js.undefined
   }
 
-  def apply(props: Props) = sfc(props)
+  def apply(props: Props) = render.elementWith(props)
 
-  val sfc = SFC1[Props] { props =>
-    useDebugValue(Name)
+  val render: ReactFC[Props] = props = {
     divWithClassname(
       props.listClassname,
       ToDoListHeader(new ToDoListHeader.Props{ var length = props.length}),
@@ -88,7 +86,8 @@ object ToDoList {
           key = t.id.toString
         })
       ))
-  }.memo
+  }
+  render.displayName(Name)
 }
 
 object ToDos {
@@ -133,9 +132,9 @@ object ToDos {
     var styles: js.UndefOr[IStyleFunctionOrObject[StyleProps, Styles]] = js.undefined
   }
 
-  def apply(props: Props) = sfc(props)
+  def apply(props: Props) = render.elementWith(props)
 
-  val sfc = SFC1[Props] { props =>
+  val render: ReactFC[Props] = props => {
     useDebugValue(Name)
     val ifield = useRef[Option[TextField.ITextField]](None)    
     useEffectMounting{() =>
@@ -196,16 +195,9 @@ object ToDos {
         })
     )
   }
+  render.displayName(Name)
 
-  @js.native
-  trait ClassNames extends IClassNamesTag {
-    var root: String      = js.native
-    var todo: String      = js.native
-    var title: String     = js.native
-    var dataEntry: String = js.native
-  }
-
-  trait Styles extends IStyleSetTag {
+  @deriveClassNames trait Styles extends IStyleSetTag {
     var root: js.UndefOr[IStyle] = js.undefined
     var todo: js.UndefOr[IStyle] = js.undefined
     var title: js.UndefOr[IStyle] = js.undefined

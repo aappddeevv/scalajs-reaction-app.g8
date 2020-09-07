@@ -4,10 +4,10 @@ import scala.scalajs.js
 import js.annotation._
 import org.scalajs.dom
 import react._
-import implicits._
+import react.implicits._
 import vdom._
 import fabric._
-import components._
+import fabric.components._
 
 /** This shows importing an existing css page that is processed by your bundler
  * if you want. It's better to use a css-in-js or even a scala-in-js solution.

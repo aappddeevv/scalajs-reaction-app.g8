@@ -2,11 +2,11 @@
 Your awesome react app!
 
 # Background
-scalajs-react and javascript/typescript integrated project. Bundling via webpack.
+scalajs-reaction and javascript/typescript integrated project. Bundling via webpack.
 
-The main scalajs-react project is located at [github](https://github.com/aappddeevv/scalajs-react).
+The main scalajs-react project is located at [github](https://github.com/aappddeevv/scalajs-reaction).
 
-This scalajs-react is different than the jpgolly/scalajs-react and a few others that have the same name. This React facade uses the [ReasonReact API](https://reasonml.github.io/reason-react). This API is now based exclusively on hooks.
+This scalajs-react is different than the jpgolly/scalajs-react and a few others that have the same name. This React facade uses the [ReasonReact API](https://reasonml.github.io/reason-react). This API is now based exclusively on function components and hooks.
 
 ## Input sources
 

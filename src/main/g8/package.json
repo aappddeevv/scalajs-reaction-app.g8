@@ -70,7 +70,7 @@
         "raw-loader": "^0.5.1",
         "react-hot-loader": "^4.3.11",
         "react-test-renderer": "^16.0.0",
-        "scalajs-friendly-source-map-loader": "^0.1.1",
+        "scalajs-friendly-source-map-loader": "^0.1.5",
         "script-loader": "^0.7.2",
         "source-map-loader": "^0.2.4",
         "style-loader": "^0.18.2",
