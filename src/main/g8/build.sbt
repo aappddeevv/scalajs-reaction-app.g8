@@ -31,7 +31,7 @@ lazy val commonSettings = Seq(
     "ttg" %%% "react-dom" % scalajsReactVersion,
     "ttg" %%% "react-macros" % scalajsReactVersion,
     "org.scala-js" %%% "scalajs-dom" % "1.0.0",
-)
+))
 
 lazy val libsettings = buildSettings ++ commonSettings
 
