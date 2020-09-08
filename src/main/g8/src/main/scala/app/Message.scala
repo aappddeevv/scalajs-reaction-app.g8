@@ -9,11 +9,11 @@ import react._
 object Message {
 
   @js.native
-  @JSImport("JS/Message", JSImport.Namespace)
-  object JS extends ReactJsComponent
+  @JSImport("JS/Message", "Message")
+  object JS extends ReactJSComponent
 
-  def apply(message: String)(children: ReactNode*) =
-    createElement(JS, literal("message"-> message), children:_*)
+  def apply(message: String) =
+    createElement(JS, literal("message"-> message))
 
   // we often define a Props trait and instead of a String directly
   /*

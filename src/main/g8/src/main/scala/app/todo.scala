@@ -73,7 +73,7 @@ object ToDoList {
 
   def apply(props: Props) = render.elementWith(props)
 
-  val render: ReactFC[Props] = props = {
+  val render: ReactFC[Props] = props => {
     divWithClassname(
       props.listClassname,
       ToDoListHeader(new ToDoListHeader.Props{ var length = props.length}),
@@ -135,8 +135,7 @@ object ToDos {
   def apply(props: Props) = render.elementWith(props)
 
   val render: ReactFC[Props] = props => {
-    useDebugValue(Name)
-    val ifield = useRef[Option[TextField.ITextField]](None)    
+    val ifield = useRef[TextField.ITextField](null)    
     useEffectMounting{() =>
       println("ToDo: subscriptions: called during mount")
         () => println("ToDo: subscriptions: unmounted")
@@ -146,7 +145,7 @@ object ToDos {
       useReducer[State,Action](reducer, State(props.todos, None))
     // if the input is added as a todo or todo remove, reset focus
     useEffect(state.todos.length){() =>
-      ifield.current.foreach(_.focus())
+      if(ifield.current != null) ifield.current.focus()
     }
 
     val cn = getClassNames(
@@ -161,19 +160,16 @@ object ToDos {
       div(new DivProps { className = cn.dataEntry })(
         TextField(new TextField.Props {
           placeholder = "enter new todo"
-          componentRef = js.defined{
-            // Option(r) -> None if r is null
-            r => ifield.current = Option(r)
-          }
+          componentRef = js.defined{ifield}
           onChangeInput = js.defined{(_, v) =>
-            dispatch(InputChanged(Option(v)))
+            dispatch(InputChanged(v.toOption))
           }
           value = state.input.getOrElse[String]("")
           autoFocus = true
           onKeyPress = js.defined{
             e => if (e.which == dom.ext.KeyCode.Enter) addit(state.input, dispatch)
           }
-        })(),
+        }),
           Button.Primary(new Button.Props {
             text = "Add"
             disabled = state.input.size == 0

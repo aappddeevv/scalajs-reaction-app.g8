@@ -43,7 +43,7 @@ object Pages {
     itemKey = "message"
     className = estyles.scrollme.asString
   })(
-    Message("hello world")()
+    Message("hello world")
   )
 
 }
@@ -57,7 +57,7 @@ object Main {
     */
   @JSExportTopLevel("App")
   def App(): Unit = {
-    uifabric_icons.initializeIcons()
+    fabric.icons.initializeIcons()
     react_dom.renderToElementWithId(
           Fabric(new Fabric.Props {
             className = estyles.toplevel.asString
