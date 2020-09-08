@@ -17,7 +17,7 @@ val commonScalacOptions = Seq(
   "-language:_",
   "-unchecked",
   "-Ywarn-numeric-widen",
-  "-Ymacro-annotation",
+  "-Ymacro-annotations",
 )
 
 val scalajsReactVersion = "0.1.0-M7"
