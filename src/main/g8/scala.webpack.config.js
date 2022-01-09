@@ -1,8 +1,9 @@
 const webpack = require("webpack")
-const merge = require("webpack-merge")
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const { merge } = require("webpack-merge")
 const path = require("path")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
+
+const distDir = path.join(__dirname, "dist")
 
 function libraryOutput(dest) {
     return {
@@ -11,52 +12,26 @@ function libraryOutput(dest) {
             filename: "[name].js",
             library: "[name]",
             libraryTarget: "var",
-        }}
-}
-
-// These css style loaders are used for both plain js/ts files
-// as well as any directly impported css files in scala.js.
-const finalStyleLoaders = [
-    { loader: "style-loader" },
-    // may want to replace with types-for-css-modules-loader
-    { loader: "css-loader", options: { modules: true, importLoaders: 1 } },
-    {
-        loader: "postcss-loader",
-        options: {
-            ident: 'postcss',
-            plugins: (loader) => [
-                require("postcss-import")({ root: loader.resourcePath }),
-                require("postcss-mixins")(),
-                require("postcss-cssnext")({
-                    //https://github.com/MoOx/postcss-cssnext/blob/master/src/features.js
-                    features: {
-                        customProperties: false,
-                        applyRule: false,
-                        calc: false,
-                    }
-                }),
-                require("postcss-reporter")({ clearMessages: true }),
-            ]
         }
     }
-]
+}
 
 // Static content is served from "dist". Webpack dynamically bundled
 // content is served from / since there is no publicPath in the 
 // devServer definition below or in webpack.output.
 const devServer = {
-    contentBase: "dist",
+    watchFiles: [distDir],
+    static: distDir,
+    historyApiFallback: true,
     compress: true,
     hot: true,
     open: true,
-    //https: true, // setting to true requires to accept self signed certs
-    watchContentBase: true,
     headers: {
         'Access-Control-Allow-Origin': '*'
     }
 }
 
-// scalapath: relative path from topdir to scala output .js file
+// scalapath: relative path from topdir to scala compiler output .js file
 const common = (scalapath) => ({
     // The entry point for this app is a scala entry point but
     // this is not required. You could have your entry point
@@ -69,7 +44,9 @@ const common = (scalapath) => ({
         // If using symlinks in node_modules, you need this false so webpack does
         // *not* use the symlink's resolved absolute path as the directory hierarchy.
         symlinks: false,
-        extensions: [".ts", ".tsx", ".js", ".jsx", ".json", "*"],
+        extensions: [".ts", ".tsx", ".js"],
+        // These aliases are used in scala code and remapped when webpack runs
+        // so that you can be location independent inside of .scala files.
         alias: {
             JS: path.resolve(__dirname, "./src/main/js"),
             Public: path.resolve(__dirname, "./src/main/public"),
@@ -79,70 +56,23 @@ const common = (scalapath) => ({
     module: {
         rules: [
             {
-                // Load css, convert to js object, also load via stylesheet.
-                test: /\.css(\.js)?$/,
-                use: finalStyleLoaders
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader", "postcss-loader"]
             },
             {
-                // Order is important for this loader, run after babel but before other css loaders. Why not postcss-js?
-                test: /\.css\.js?$/,
-                use: [{ loader: "css-js-loader" }]
+                test: /\.tsx$|\.ts$|\.js/,
+                exclude: /node_modules/,
+                use: "ts-loader"
             },
-          {
-            test: /\.jsx?$/, // picks up pure .js and .jsx
-            exclude: /node_modules/,
-            include: [
-                    path.resolve(__dirname, "./src/main/js")
-                ],
-            use: ["babel-loader"]
-          },
-            {
-                test: /\.tsx$|\.ts$/,
-                include: [
-                    path.resolve(__dirname, "./src/main/js")
-                ],
-                exclude: [
-                    /node_modules/,
-                    /__tests__/,
-                ],
-                use: [
-                    { loader: "babel-loader" },
-                    {
-                        loader: "ts-loader",
-                        options: {
-                            compilerOptions: {
-                                // override paths, should use override plugin :-)
-                                paths: {
-                                    "ScalaJS": [scalapath]
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: ["url-loader"]
-            },
-            {
-                test: /\.js$/,
-                use: ["scalajs-friendly-source-map-loader"],
-                enforce: "pre",
-                exclude: [/node_modules/],
-            },
-            {
-                test: /\.md$/,
-                use: "raw-loader"
-            }
         ]
     },
     devServer: devServer
 })
 
 function copies(dest) {
-    return [
-        { from: "src/main/public/*.html", to: dest, flatten: true },
-    ]
+    return {
+        patterns: [{ from: "src/main/public", to: dest }]
+    }
 }
 
 const dev = {
@@ -156,11 +86,11 @@ const prod = {
 }
 
 module.exports = function (env) {
-    const isProd = env && env.BUILD_KIND && env.BUILD_KIND==="production"
+    const isProd = env && env.BUILD_KIND && env.BUILD_KIND === "production"
     // the "app" name must be coordinated with build.sbt
-    const scalapath = path.join(__dirname, "./target/scala-2.13/app-" + (isProd ? "opt.js":"fastopt.js"))
-    const staticAssets = copies(path.join(__dirname, "dist"))
-    const output = libraryOutput(path.join(__dirname, "dist"))
+    const scalapath = path.join(__dirname, "./target/scala-3.1.0/app-" + (isProd ? "opt.js" : "fastopt.js"))
+    const staticAssets = copies(distDir)
+    const output = libraryOutput(distDir)
     const globals = (nodeEnv) => ({
         "process.env": { "NODE_ENV": JSON.stringify(nodeEnv || "development") }
     })
@@ -169,7 +99,7 @@ module.exports = function (env) {
     console.log("isProd: ", isProd)
     console.log("scalapath: ", scalapath)
     const modeNone = { mode: "none" }
-    
+
     if (isProd) {
         const g = globals("production")
         console.log("Production build")
@@ -177,13 +107,7 @@ module.exports = function (env) {
         return merge(output, common(scalapath), modeNone, prod, {
             plugins: [
                 new webpack.DefinePlugin(g),
-                new UglifyJsPlugin({
-                    cache: true,
-                    parallel: 4,
-                    sourceMap: true,
-                    uglifyOptions: { ecma: 5, compress: true }
-                }),
-                copyplugin, // must be first
+                copyplugin, // must be first, which means last in the list
             ]
         })
     }
@@ -193,7 +117,6 @@ module.exports = function (env) {
         console.log("globals: ", g)
         return merge(output, common(scalapath), modeNone, dev, {
             plugins: [
-                new webpack.HotModuleReplacementPlugin(),
                 new webpack.DefinePlugin(g),
                 copyplugin,
             ]

@@ -1,12 +1,12 @@
 package app
 
 import scala.scalajs.js
-import js.annotation._
+import js.annotation.*
 import js.Dynamic.literal
 
-import react._
+import react.*
 
-object Message {
+object Message:
 
   @js.native
   @JSImport("JS/Message", "Message")
@@ -21,4 +21,4 @@ object Message {
     val message: String
   }
   */
-}
+end Message

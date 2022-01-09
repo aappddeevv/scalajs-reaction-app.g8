@@ -6,8 +6,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 lazy val buildSettings = Seq(
   organization := "$org$",
   licenses ++= Seq(("MIT", url("http://opensource.org/licenses/MIT"))),
-  scalaVersion := "2.13.2",
-  resolvers += Resolver.bintrayRepo("aappddeevv", "maven"),  
+  scalaVersion := "3.1.0"
 )
 
 val commonScalacOptions = Seq(
@@ -16,21 +15,20 @@ val commonScalacOptions = Seq(
   "-feature",
   "-language:_",
   "-unchecked",
-  "-Ywarn-numeric-widen",
-  "-Ymacro-annotations",
+  "-Yexplicit-nulls",
+  "-language:implicitConversions"
 )
 
-val scalajsReactVersion = "0.1.0-M7"
+val scalajsReactVersion = "1.0.0-RC1"
 
 lazy val commonSettings = Seq(
   scalacOptions ++= commonScalacOptions,
   scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   libraryDependencies ++= Seq(
-    "ttg" %%% "react" % scalajsReactVersion,
-    "ttg" %%% "fabric" % scalajsReactVersion,
-    "ttg" %%% "react-dom" % scalajsReactVersion,
-    "ttg" %% "react-macros" % scalajsReactVersion,
-    "org.scala-js" %%% "scalajs-dom" % "1.0.0",
+    "org.ttgoss.js" %%% "react" % scalajsReactVersion,
+    "org.ttgoss.js" %%% "fabric" % scalajsReactVersion,
+    "org.ttgoss.js" %%% "react-dom" % scalajsReactVersion,
+    "org.scala-js" %%% "scalajs-dom" % "2.0.0",
 ))
 
 lazy val libsettings = buildSettings ++ commonSettings
@@ -50,18 +48,18 @@ watchSources += baseDirectory.value / "src/main/public"
 
 val npmBuild = taskKey[Unit]("fullOptJS then webpack")
 npmBuild := {
-  (fullOptJS in Compile).value
+  (Compile / fullOptJS).value
   "npm run app" !
 }
 
 val npmBuildFast = taskKey[Unit]("fastOptJS then webpack")
 npmBuildFast := {
-  (fastOptJS in Compile).value
+  (Compile / fastOptJS ).value
   "npm run app:dev" !
 }
 
 val npmRunDemo = taskKey[Unit]("fastOptJS then run webpack server")
 npmRunDemo := {
-  (fastOptJS in Compile).value
+  (Compile / fastOptJS).value
   "npm run app:dev-start" !
 }

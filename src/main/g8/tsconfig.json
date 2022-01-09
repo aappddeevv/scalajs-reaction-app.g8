@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"jsx": "preserve",
+		"jsx": "react",
 		"strictNullChecks": true,
 		"allowJs": true,
 		"importHelpers": true,
@@ -14,13 +14,8 @@
 		"preserveSymlinks": false,
 		"moduleResolution": "node",
 		"target": "esnext",
-		"module": "commonjs",
+		"module": "es6",
 		"baseUrl": ".",
-		"paths": {
-			"ScalaJS": [
-				"./target/scala-2.12/app-fastopt.js"
-			],
-		}
 	},
 	"exclude": [
 		"src/**/*.spec.ts",

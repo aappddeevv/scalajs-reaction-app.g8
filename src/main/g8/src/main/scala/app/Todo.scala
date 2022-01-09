@@ -1,29 +1,29 @@
 package app
 
 import scala.scalajs.js
-import js.annotation._
+import js.annotation.*
 import js.Dynamic.{literal => lit, global => g}
-import js.JSConverters._
+import js.JSConverters.*
 import org.scalajs.dom
-import react._
-import react.implicits._
-import fabric._
-import fabric.components._
-import fabric.styling._
-import vdom._
+import react.*
+import react.syntax.*
+import react.conversions.given
+import fabric.*
+import fabric.components.*
+import fabric.styling.*
+import vdom.*
 
-case class ToDo(id: Int, name: String, added: js.Date = null, completed: Boolean = false)
+case class ToDo(id: Int, name: String, added: js.Date|Null = null, completed: Boolean = false)
 
-object ToDoItem {
+object ToDoItem:
   val Name = "ToDoItem"
 
-  trait Props extends js.Object {
+  trait Props extends js.Object:
     var todo: ToDo
     var remove: () => Unit
     var rootClassname: js.UndefOr[String] = js.undefined
     var titleClassname: js.UndefOr[String] = js.undefined
     var key: js.UndefOr[String] = js.undefined
-  }
 
   def apply(props: Props) = render.elementWith(props)
 
@@ -42,14 +42,13 @@ object ToDoItem {
     )
   }
   render.displayName(Name)
-}
+end ToDoItem
 
-object ToDoListHeader {
+object ToDoListHeader:
   val Name = "ToDoListHeader"
 
-  trait Props extends js.Object {
+  trait Props extends js.Object:
     var length: Int
-  }
 
   def apply(props: Props) = render.elementWith(props)
 
@@ -57,19 +56,18 @@ object ToDoListHeader {
     div(Label(s"# To Dos - ${props.length}"))
   }
   render.displayName(Name)
-}
+end ToDoListHeader
 
-object ToDoList {
+object ToDoList:
   val Name = "ToDoList"
 
-  trait Props extends js.Object {
+  trait Props extends js.Object:
     var length: Int
     var todos: Seq[ToDo]
     var remove: Int => Unit
     var listClassname: js.UndefOr[String] = js.undefined
     var todoClassname: js.UndefOr[String] = js.undefined
     var titleClassname: js.UndefOr[String] = js.undefined
-  }
 
   def apply(props: Props) = render.elementWith(props)
 
@@ -88,9 +86,9 @@ object ToDoList {
       ))
   }
   render.displayName(Name)
-}
+end ToDoList
 
-object ToDos {
+object ToDos:
   sealed trait Action
   case class Add(todo: ToDo)                     extends Action
   case class Remove(id: Int)                     extends Action
@@ -125,27 +123,26 @@ object ToDos {
         state.copy(input = iopt)
     }
   
-  trait Props extends js.Object {
+  trait Props extends js.Object:
     var title: String
     var todos: Seq[ToDo]
     var className: js.UndefOr[String] = js.undefined
     var styles: js.UndefOr[IStyleFunctionOrObject[StyleProps, Styles]] = js.undefined
-  }
 
   def apply(props: Props) = render.elementWith(props)
 
   val render: ReactFC[Props] = props => {
-    val ifield = useRef[TextField.ITextField](null)    
+    val ifield = useRefWithNull[TextField.ITextField](null)    
     useEffectMounting{() =>
       println("ToDo: subscriptions: called during mount")
-        () => println("ToDo: subscriptions: unmounted")
+      () => println("ToDo: subscriptions: unmounted")
     }
 
     val (state, dispatch) =
       useReducer[State,Action](reducer, State(props.todos, None))
     // if the input is added as a todo or todo remove, reset focus
     useEffect(state.todos.length){() =>
-      if(ifield.current != null) ifield.current.focus()
+      if ifield.current != null then ifield.current.focus()
     }
 
     val cn = getClassNames(
@@ -193,17 +190,21 @@ object ToDos {
   }
   render.displayName(Name)
 
-  @deriveClassNames trait Styles extends IStyleSetTag {
+  trait Styles extends IStyleSetTag:
     var root: js.UndefOr[IStyle] = js.undefined
     var todo: js.UndefOr[IStyle] = js.undefined
     var title: js.UndefOr[IStyle] = js.undefined
     var dataEntry: js.UndefOr[IStyle] = js.undefined
-  }
+  
+  trait ClassNames extends IClassNamesTag:
+    val root: String
+    val todo: String
+    val title: String
+    val dataEntry: String
 
-  trait StyleProps extends js.Object {
+  trait StyleProps extends js.Object:
     var className: js.UndefOr[String] = js.undefined
     var randomArg: js.UndefOr[Int] = js.undefined
-  }
 
   val getStyles = stylingFunction[StyleProps, Styles] { props =>
     val randomArg = props.randomArg.getOrElse(300)
@@ -238,10 +239,9 @@ object ToDos {
   import merge_styles._
   val getClassNames: GetClassNamesFn[StyleProps, Styles, ClassNames] =
     (p,s) => mergeStyleSets(concatStyleSetsWithProps(p,getStyles,s))
-}
+end ToDos
 
-object fakedata {
+object fakedata:
   val initialToDos = Seq(
     ToDo(ToDos.mkId(), "Call Fred")
   )
-}

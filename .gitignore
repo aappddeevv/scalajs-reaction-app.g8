@@ -22,3 +22,5 @@ node_modules/*
 \#*\#
 .\#*
 docs/src/main/resources/microsite/static
+.metals
+.vscode
